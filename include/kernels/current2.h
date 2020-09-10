@@ -23,13 +23,12 @@
 
 class current2;
 
-template<>
+template <>
 InputParameters validParams<current2>();
 
-class current2: public Kernel
+class current2 : public Kernel
 {
 public:
-
   current2(const InputParameters & parameters);
 
 protected:
@@ -43,6 +42,5 @@ private:
   const MaterialProperty<Real> & _electrical_conductivity;
   const MaterialProperty<Real> & _seebeck_coefficient;
   const Real _len_scale;
-
 };
 #endif

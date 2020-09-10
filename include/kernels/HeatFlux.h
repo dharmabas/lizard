@@ -3,15 +3,14 @@
 
 #include "Kernel.h"
 
-class HeatFlux;//this is the class i define by myself and not an existing moose object?//
+class HeatFlux; // this is the class i define by myself and not an existing moose object?//
 
-template<>
+template <>
 InputParameters validParams<HeatFlux>();
 
-class HeatFlux: public Kernel
+class HeatFlux : public Kernel
 {
 public:
-
   HeatFlux(const InputParameters & parameters);
 
 protected:

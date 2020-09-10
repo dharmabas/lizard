@@ -23,13 +23,12 @@
 
 class q1;
 
-template<>
+template <>
 InputParameters validParams<q1>();
 
-class q1: public Kernel
+class q1 : public Kernel
 {
 public:
-
   q1(const InputParameters & parameters);
 
 protected:
@@ -39,6 +38,5 @@ protected:
 private:
   const MaterialProperty<Real> & _thermal_conductivity;
   const Real _len_scale;
-
 };
 #endif

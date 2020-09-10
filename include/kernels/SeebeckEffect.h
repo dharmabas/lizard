@@ -3,15 +3,14 @@
 
 #include "Kernel.h"
 
-class SeebeckEffect;//this is the class i define by myself and not an existing moose object?//
+class SeebeckEffect; // this is the class i define by myself and not an existing moose object?//
 
-template<>
+template <>
 InputParameters validParams<SeebeckEffect>();
 
-class SeebeckEffect: public Kernel
+class SeebeckEffect : public Kernel
 {
 public:
-
   SeebeckEffect(const InputParameters & parameters);
 
 protected:

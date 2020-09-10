@@ -15,11 +15,17 @@ ThermoelectricMaterialTempl<is_ad>::validParams()
   params.addCoupledVar("temp", "Coupled Temperature");
 
   params.addParam<Real>("thermal_conductivity", "The thermal conductivity value");
-  params.addParam<FunctionName>("thermal_conductivity_temperature_function","","Thermal conductivity as a function of temperature.");
+  params.addParam<FunctionName>("thermal_conductivity_temperature_function",
+                                "",
+                                "Thermal conductivity as a function of temperature.");
   params.addParam<Real>("electrical_conductivity", "The electrical conductivity value");
-  params.addParam<FunctionName>("electrical_conductivity_temperature_function", "", "electrical conductivity as a function of temperature.");
+  params.addParam<FunctionName>("electrical_conductivity_temperature_function",
+                                "",
+                                "electrical conductivity as a function of temperature.");
   params.addParam<Real>("seebeck_coefficient", "The seebeck coefficient value");
-  params.addParam<FunctionName>("seebeck_coefficient_temperature_function", "", "seebeck coefficient as a function of temperature.");
+  params.addParam<FunctionName>("seebeck_coefficient_temperature_function",
+                                "",
+                                "seebeck coefficient as a function of temperature.");
   params.addClassDescription("General-purpose material model for thermoelectrics");
 
   return params;
@@ -32,9 +38,12 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
     _has_temp(isCoupled("temp")),
     _temperature((_has_temp && !is_ad) ? coupledValue("temp") : _zero),
     _ad_temperature((_has_temp && is_ad) ? adCoupledValue("temp") : _ad_zero),
-    _my_thermal_conductivity(isParamValid("thermal_conductivity") ? getParam<Real>("thermal_conductivity") : 0),
-    _my_electrical_conductivity(isParamValid("electrical_conductivity") ? getParam<Real>("electrical_conductivity") : 0),
-    _my_seebeck_coefficient(isParamValid("seebeck_coefficient") ? getParam<Real>("seebeck_coefficient") : 0),
+    _my_thermal_conductivity(
+        isParamValid("thermal_conductivity") ? getParam<Real>("thermal_conductivity") : 0),
+    _my_electrical_conductivity(
+        isParamValid("electrical_conductivity") ? getParam<Real>("electrical_conductivity") : 0),
+    _my_seebeck_coefficient(
+        isParamValid("seebeck_coefficient") ? getParam<Real>("seebeck_coefficient") : 0),
 
     _thermal_conductivity(declareGenericProperty<Real, is_ad>("thermal_conductivity")),
     _thermal_conductivity_dT(declareProperty<Real>("thermal_conductivity_dT")),
@@ -72,8 +81,8 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
   }
   if (isParamValid("electrical_conductivity") && _electrical_conductivity_temperature_function)
   {
-    mooseError(
-        "Cannot define both electrical conductivity and electrical conductivity temperature function");
+    mooseError("Cannot define both electrical conductivity and electrical conductivity temperature "
+               "function");
   }
   if (_seebeck_coefficient_temperature_function && !_has_temp)
   {
@@ -81,7 +90,8 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
   }
   if (isParamValid("seebeck_coefficient") && _seebeck_coefficient_temperature_function)
   {
-    mooseError("Cannot define both seebeck coefficient and seebeck coefficient temperature function");
+    mooseError(
+        "Cannot define both seebeck coefficient and seebeck coefficient temperature function");
   }
 }
 
@@ -178,8 +188,7 @@ ThermoelectricMaterialTempl<is_ad>::computeProperties()
       _seebeck_coefficient_dT[qp] =
           _seebeck_coefficient_temperature_function->timeDerivative(qp_temperature, p);
       if (is_ad)
-        setDerivatives(
-            _seebeck_coefficient[qp], _seebeck_coefficient_dT[qp], _ad_temperature[qp]);
+        setDerivatives(_seebeck_coefficient[qp], _seebeck_coefficient_dT[qp], _ad_temperature[qp]);
     }
     else
     {

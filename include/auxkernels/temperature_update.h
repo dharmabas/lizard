@@ -5,25 +5,24 @@
 
 class temperature_update;
 
-template<>
+template <>
 InputParameters validParams<temperature_update>();
 
 class temperature_update : public AuxKernel
 {
 public:
-temperature_update(const InputParameters & parameters);
+  temperature_update(const InputParameters & parameters);
 
-virtual ~temperature_update() {}
+  virtual ~temperature_update() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-const VariableValue & _potential_E_int;
-const VariableGradient & _potential_E_int_grad;
-const MaterialProperty<Real> & _seebeck_coefficient;
-//const Real _dx;
-
+  const VariableValue & _potential_E_int;
+  const VariableGradient & _potential_E_int_grad;
+  const MaterialProperty<Real> & _seebeck_coefficient;
+  // const Real _dx;
 };
 
 #endif

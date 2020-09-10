@@ -23,13 +23,12 @@
 
 class Electrostatics;
 
-template<>
+template <>
 InputParameters validParams<Electrostatics>();
 
-class Electrostatics: public Kernel
+class Electrostatics : public Kernel
 {
 public:
-
   Electrostatics(const InputParameters & parameters);
 
 protected:
@@ -39,6 +38,5 @@ protected:
 private:
   const MaterialProperty<Real> & _electrical_conductivity;
   const Real _len_scale;
-
 };
 #endif

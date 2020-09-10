@@ -5,26 +5,24 @@
 
 class potential_update;
 
-template<>
+template <>
 InputParameters validParams<potential_update>();
 
 class potential_update : public AuxKernel
 {
 public:
-potential_update(const InputParameters & parameters);
+  potential_update(const InputParameters & parameters);
 
-virtual ~potential_update() {}
+  virtual ~potential_update() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-
-const VariableValue & _temperature;
-const VariableGradient & _temperature_grad;
-const MaterialProperty<Real> & _seebeck_coefficient;
-//const Real _dx;
-
+  const VariableValue & _temperature;
+  const VariableGradient & _temperature_grad;
+  const MaterialProperty<Real> & _seebeck_coefficient;
+  // const Real _dx;
 };
 
 #endif

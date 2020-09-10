@@ -23,13 +23,12 @@
 
 class current1;
 
-template<>
+template <>
 InputParameters validParams<current1>();
 
-class current1: public Kernel
+class current1 : public Kernel
 {
 public:
-
   current1(const InputParameters & parameters);
 
 protected:
@@ -42,6 +41,5 @@ private:
   const VariableGradient & _potential_E_int_grad;
   const MaterialProperty<Real> & _electrical_conductivity;
   const Real _len_scale;
-
 };
 #endif

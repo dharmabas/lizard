@@ -16,31 +16,27 @@
 
 **/
 
-#ifndef q3_H
-#define q3_H
+#ifndef electric_flux1_H
+#define electric_flux1_H
 
 #include "Kernel.h"
 
-class q3;
+class electric_flux1;
 
 template <>
-InputParameters validParams<q3>();
+InputParameters validParams<electric_flux1>();
 
-class q3 : public Kernel
+class electric_flux1 : public Kernel
 {
 public:
-  q3(const InputParameters & parameters);
+  electric_flux1(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
 
 private:
-  const unsigned int _temperature_var;
-  const VariableValue & _temperature;
-  const VariableGradient & _temperature_grad;
-  const MaterialProperty<Real> & _electrical_conductivity;
-  const MaterialProperty<Real> & _seebeck_coefficient;
+  const unsigned int _component;
   const Real _len_scale;
 };
 #endif

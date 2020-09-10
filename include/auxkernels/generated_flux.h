@@ -5,21 +5,20 @@
 
 class generated_flux;
 
-template<>
+template <>
 InputParameters validParams<generated_flux>();
 
 class generated_flux : public AuxKernel
 {
 public:
-generated_flux(const InputParameters & parameters);
+  generated_flux(const InputParameters & parameters);
 
-virtual ~generated_flux() {}
+  virtual ~generated_flux() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-
   const VariableValue & _temperature;
   const VariableGradient & _temperature_grad;
   const VariableValue & _potential_E_int;

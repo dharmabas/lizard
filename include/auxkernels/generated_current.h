@@ -5,21 +5,20 @@
 
 class generated_current;
 
-template<>
+template <>
 InputParameters validParams<generated_current>();
 
 class generated_current : public AuxKernel
 {
 public:
-generated_current(const InputParameters & parameters);
+  generated_current(const InputParameters & parameters);
 
-virtual ~generated_current() {}
+  virtual ~generated_current() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-
   const VariableValue & _temperature;
   const VariableGradient & _temperature_grad;
   const VariableValue & _potential_E_int;

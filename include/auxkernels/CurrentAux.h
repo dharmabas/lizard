@@ -5,24 +5,24 @@
 
 class CurrentAux;
 
-template<>
+template <>
 InputParameters validParams<CurrentAux>();
 
 class CurrentAux : public AuxKernel
 {
 public:
-CurrentAux(const InputParameters & parameters);
+  CurrentAux(const InputParameters & parameters);
 
-virtual ~CurrentAux() {}
+  virtual ~CurrentAux() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-const VariableValue & _potential_E_int;
-const VariableGradient & _potential_E_int_grad;
-const unsigned int _component;
-const MaterialProperty<Real> & _electrical_conductivity;
+  const VariableValue & _potential_E_int;
+  const VariableGradient & _potential_E_int_grad;
+  const unsigned int _component;
+  const MaterialProperty<Real> & _electrical_conductivity;
 };
 
 #endif
