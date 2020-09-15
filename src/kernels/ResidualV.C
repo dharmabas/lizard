@@ -10,8 +10,8 @@ validParams<ResidualV>()
 {
   InputParameters params = validParams<Kernel>();
   params.addClassDescription("Calculates a residual contribution due to modified ohm's law");
-  params.addParam<Real>("electrical_conductivity", "electrical_conductivity");
-  params.addParam<Real>("seebeck_coefficient", "seebeck_coefficient");
+  params.addParam<MaterialPropertyName>("electrical_conductivity", "electrical_conductivity");
+  params.addParam<MaterialPropertyName>("seebeck_coefficient", "seebeck_coefficient");
   params.addRequiredParam<unsigned int>("component",
                                         "An integer corresponding to the direction the variable "
                                         "this kernel acts in. (0 for x, 1 for y, 2 for z)");
@@ -30,8 +30,8 @@ ResidualV::ResidualV(const InputParameters & parameters)
     _temperature_var(coupled("temperature")),
     _temperature(coupledValue("temperature")),
     _temperature_grad(coupledGradient("temperature")),
-    _electrical_conductivity(getParam<Real>("electrical_conductivity")),
-    _seebeck_coefficient(getParam<Real>("seebeck_coefficient")),
+    _electrical_conductivity(getMaterialProperty<Real>("electrical_conductivity")),
+    _seebeck_coefficient(getMaterialProperty<Real>("seebeck_coefficient")),
     _len_scale(getParam<Real>("len_scale"))
 {
 }
@@ -40,18 +40,18 @@ Real
 ResidualV::computeQpResidual()
 
 {
-  return (((-_grad_test[_i][_qp](0)) *
-               (-_electrical_conductivity * _seebeck_coefficient * _temperature_grad[_qp](0)) +
+  return (((-_grad_test[_i][_qp](0)) * (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] *
+                                        _temperature_grad[_qp](0)) +
            (-_grad_test[_i][_qp](0)) *
-               (-_electrical_conductivity * _potential_E_int_grad[_qp](0))) +
-          (-_grad_test[_i][_qp](1) *
-               (-_electrical_conductivity * _seebeck_coefficient * _temperature_grad[_qp](1)) +
+               (-_electrical_conductivity[_qp] * _potential_E_int_grad[_qp](0))) +
+          (-_grad_test[_i][_qp](1) * (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] *
+                                      _temperature_grad[_qp](1)) +
            (-_grad_test[_i][_qp](1)) *
-               (-_electrical_conductivity * _potential_E_int_grad[_qp](1))) +
-          (-_grad_test[_i][_qp](2) *
-               (-_electrical_conductivity * _seebeck_coefficient * _temperature_grad[_qp](2)) +
+               (-_electrical_conductivity[_qp] * _potential_E_int_grad[_qp](1))) +
+          (-_grad_test[_i][_qp](2) * (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] *
+                                      _temperature_grad[_qp](2)) +
            (-_grad_test[_i][_qp](2)) *
-               (-_electrical_conductivity * _potential_E_int_grad[_qp](2)))) *
+               (-_electrical_conductivity[_qp] * _potential_E_int_grad[_qp](2)))) *
          _len_scale;
 }
 
@@ -59,9 +59,9 @@ Real
 ResidualV::computeQpJacobian()
 
 {
-  return ((-_grad_test[_i][_qp](0)) * (-_electrical_conductivity * _grad_phi[_j][_qp](0)) +
-          (-_grad_test[_i][_qp](1)) * (-_electrical_conductivity * _grad_phi[_j][_qp](1)) +
-          (-_grad_test[_i][_qp](2)) * (-_electrical_conductivity * _grad_phi[_j][_qp](2))) *
+  return ((-_grad_test[_i][_qp](0)) * (-_electrical_conductivity[_qp] * _grad_phi[_j][_qp](0)) +
+          (-_grad_test[_i][_qp](1)) * (-_electrical_conductivity[_qp] * _grad_phi[_j][_qp](1)) +
+          (-_grad_test[_i][_qp](2)) * (-_electrical_conductivity[_qp] * _grad_phi[_j][_qp](2))) *
          _len_scale;
 }
 
@@ -69,10 +69,10 @@ Real
 ResidualV::computeQpOffDiagJacobian()
 {
   return ((-_grad_test[_i][_qp](0)) *
-              (-_electrical_conductivity * _seebeck_coefficient * _grad_phi[_j][_qp](0)) +
+              (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](0)) +
           (-_grad_test[_i][_qp](1)) *
-              (-_electrical_conductivity * _seebeck_coefficient * _grad_phi[_j][_qp](1)) +
-          (-_grad_test[_i][_qp](2)) *
-              (-_electrical_conductivity * _seebeck_coefficient * _grad_phi[_j][_qp](2))) *
+              (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](1)) +
+          (-_grad_test[_i][_qp](2)) * (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] *
+                                       _grad_phi[_j][_qp](2))) *
          _len_scale;
 }
