@@ -26,8 +26,8 @@ private:
   const unsigned int _temperature_var;
   const VariableValue & _temperature;
   const VariableGradient & _temperature_grad;
-  const Real _electrical_conductivity;
-  const Real _seebeck_coefficient;
+  const MaterialProperty<Real> & _electrical_conductivity;
+  const MaterialProperty<Real> & _seebeck_coefficient;
   const Real _len_scale;
 };
 #endif
