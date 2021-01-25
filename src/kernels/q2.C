@@ -1,50 +1,55 @@
-#include "q2.h"
+#include "Q2.h"
 
-registerMooseObject("lizardApp", q2);
+registerMooseObject("lizardApp", Q2);
 
 template <>
 InputParameters
-validParams<q2>()
+validParams<Q2>()
 {
   InputParameters params = validParams<Kernel>();
   params.addClassDescription("Calculates a residual contribution due to nabla squared Phi = 0");
   params.addRequiredCoupledVar("temperature", "temperature");
   params.addParam<MaterialPropertyName>(
-      "electrical_conductivity",
-      "Electrical Conductivity",
-      "Property name of the electrical conductivity material property");
-  params.addParam<MaterialPropertyName>(
       "seebeck_coefficient",
-      "Seebeck coefficient",
+      "seebeck_coefficient",
       "Property name of the Seebeck coefficient material property");
+  params.addRequiredParam<unsigned int>("component",
+                                        "An integer corresponding to the direction the variable "
+                                        "this kernel acts in. (0 for x, 1 for y, 2 for z)");
   params.addParam<Real>("len_scale", 1.0, "the length scale of the unit");
   return params;
 }
 
-q2::q2(const InputParameters & parameters)
+Q2::Q2(const InputParameters & parameters)
   : Kernel(parameters),
+    _component(getParam<unsigned int>("component")),
     _temperature_var(coupled("temperature")),
     _temperature(coupledValue("temperature")),
     _temperature_grad(coupledGradient("temperature")),
-    _electrical_conductivity(getMaterialProperty<Real>("electrical_conductivity")),
     _seebeck_coefficient(getMaterialProperty<Real>("seebeck_coefficient")),
     _len_scale(getParam<Real>("len_scale"))
 {
 }
 
 Real
-q2::computeQpResidual()
+Q2::computeQpResidual()
 {
-  Real Relec = 0.0;
-  Relec += _grad_test[_i][_qp] * _seebeck_coefficient[_qp] * _temperature[_qp] *
-           _electrical_conductivity[_qp] * _grad_u[_qp] * _len_scale;
-  ///  Moose::out << "\n R_elec-"; std::cout << " = " << Relec;
-  return Relec;
+
+  return _grad_test[_i][_qp](_component) *
+         (_grad_u[_qp](_component) +
+          (_seebeck_coefficient[_qp] * _temperature_grad[_qp](_component))) *
+         _len_scale;
 }
 
 Real
-q2::computeQpJacobian()
+Q2::computeQpJacobian()
 {
-  return _grad_test[_i][_qp] * _seebeck_coefficient[_qp] * _temperature[_qp] *
-         _electrical_conductivity[_qp] * _grad_phi[_j][_qp] * _len_scale;
+  return _grad_test[_i][_qp](_component) * (_grad_phi[_j][_qp](_component)) * _len_scale;
+}
+
+Real
+Q2::computeQpOffDiagJacobian()
+{
+  return _grad_test[_i][_qp](_component) *
+         (_seebeck_coefficient[_qp] * _grad_phi[_j][_qp](_component)) * _len_scale;
 }

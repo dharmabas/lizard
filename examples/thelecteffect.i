@@ -1,8 +1,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 30
-  ny = 30
+  nx = 50
+  ny = 50
   xmin = -0.000762
   xmax = 0.000762
   ymin = -0.0007
@@ -14,6 +14,7 @@
   [./potential_E_int]
     order = FIRST
     family = LAGRANGE
+    #initial_condition = 0
   [../]
   [./temperature]
     order = FIRST
@@ -23,8 +24,20 @@
   []
 
 [Kernels]
+  [./q1]
+    type = q1
+    variable = temperature
+    thermal_conductivity = 'thermal_conductivity'
+  [../]
+  [./current1]
+    type = current1
+    variable = potential_E_int
+    potential_E_int = potential_E_int
+    electrical_conductivity = 'electrical_conductivity'
+  [../]
+
   [./residualV_x]
-  type = ResidualV
+  type = Q1
   component = 0
   variable = potential_E_int
   temperature = 'temperature'
@@ -34,7 +47,7 @@
 [../]
 
 [./residualV_y]
- type = ResidualV
+ type = Q1
  component = 1
  variable = potential_E_int
  temperature = 'temperature'
@@ -44,7 +57,7 @@
 [../]
 
 [./residualV_z]
- type = ResidualV
+ type = Q1
  component = 2
  variable = potential_E_int
  temperature = 'temperature'
@@ -54,7 +67,7 @@
 [../]
 
 [./residualT_x]
- type = ResidualT
+ type = Q2
  component = 0
  variable = temperature
  temperature = 'temperature'
@@ -65,7 +78,7 @@
 [../]
 
 [./residualT_y]
- type = ResidualT
+ type = Q2
  component = 1
  variable = temperature
  temperature = 'temperature'
@@ -76,7 +89,7 @@
 [../]
 
 [./residualT_z]
- type = ResidualT
+ type = Q2
  component = 2
  variable = temperature
  temperature = 'temperature'
@@ -177,99 +190,153 @@
 #   [../]
 #   []
 
-  # [Functions]
-  #   [./k_func]
-  #     type = ParsedFunction
-  #     value = '1.758 - 5.290e-3 * t + 4.134e-5 * t^2'
-  #   [../]
-  #   [./lam_func]
-  #     type = ParsedFunction
-  #     value = '1.028e5 - 5.369e2 * t + 1.824 * t^2'
-  #   [../]
-  #   [./eps_func]
-  #     type = ParsedFunction
-  #     value = '1.802e-4 + 3.861e-7 * t - 9.582e-10 * t^2'
-  #   [../]
-  # []
   [Functions]
     [./k_func]
-      type = PiecewiseLinear
-      x = '300 400 500 600 700 800'
-      y = '140 100 80 60 50 40'
+      type = ParsedFunction
+      value = '1.758 - 5.290e-3 * t + 4.134e-5 * t^2'
     [../]
     [./lam_func]
-      type = PiecewiseLinear
-      x = '300 400 500 600 700 800'
-      y = '1000 2000 3000 4000 5000 6000'
+      type = ParsedFunction
+      value = '1.028e5 - 5.369e2 * t + 1.824 * t^2'
     [../]
     [./eps_func]
-      type = PiecewiseLinear
-      x = '300 400 500 600 700 800'
-      y = '300e-6 300e-6 300e-6 300e-6 300e-6 300e-6'
+      type = ParsedFunction
+      value = '1.802e-4 + 3.861e-7 * t - 9.582e-10 * t^2'
     [../]
   []
- [Materials]
-    [./ThermoelectricProperties]
-     type = GenericConstantMaterial
-     prop_names = 'electrical_conductivity thermal_conductivity seebeck_coefficient'
-     prop_values = '8.422e4 1.612 1.941e-4'
-    [../]
-  []
-
-  # [Materials]
-  #   [./ThermoelectricProperties]
-  #    type = ThermoelectricMaterial
-  #    temp = temperature
-  #    thermal_conductivity_temperature_function = k_func
-  #    electrical_conductivity_temperature_function = lam_func
-  #    seebeck_coefficient_temperature_function = eps_func
+  # [Functions]
+  #   [./k_func]
+  #     type = PiecewiseLinear
+  #     x = '300 400 500 600 700 800'
+  #     y = '140 100 80 60 50 40'
+  #   [../]
+  #   [./lam_func]
+  #     type = PiecewiseLinear
+  #     x = '300 400 500 600 700 800'
+  #     y = '1000 2000 3000 4000 5000 6000'
+  #   [../]
+  #   [./eps_func]
+  #     type = PiecewiseLinear
+  #     x = '300 400 500 600 700 800'
+  #     y = '300e-6 300e-6 300e-6 300e-6 300e-6 300e-6'
   #   [../]
   # []
+ # [Materials]
+ #    [./ThermoelectricProperties]
+ #     type = GenericConstantMaterial
+ #     prop_names = 'electrical_conductivity thermal_conductivity seebeck_coefficient'
+ #     prop_values = '8.422e4 1.612 1.941e-4'
+ #    [../]
+ #  []
 
-[BCs]
-  [./left_temperature]
-    type = DirichletBC
-    variable = temperature
-    boundary = 'left'
-    value = 25
-  [../]
-  [./right_temperature]
-    type = DirichletBC
-    variable = temperature
-    boundary = 'right'
-    value = 25
-  [../]
+  [Materials]
+    [./ThermoelectricProperties]
+     type = ThermoelectricMaterial
+     temp = temperature
+     thermal_conductivity_temperature_function = k_func
+     electrical_conductivity_temperature_function = lam_func
+     seebeck_coefficient_temperature_function = eps_func
+    [../]
+  []
 
-  [./left_potential]
-    type = DirichletBC
-    variable = potential_E_int
-    boundary = 'left'
-    value = 0.058
-  [../]
-  [./right_potential]
-    type = DirichletBC
-    variable = potential_E_int
-    boundary = 'right'
-    value = 0
-  [../]
+  [BCs]
+    [./left_temperature]
+      type = DirichletBC
+      variable = temperature
+      boundary = 'left'
+      value = 0
+    [../]
+    [./right_temperature]
+      type = DirichletBC
+      variable = temperature
+      boundary = 'right'
+      value = 25
+    [../]
 
-  [./top_bottom_temperature]
-    type = NeumannBC
-    variable = temperature
-    boundary = 'top bottom'
-    value = 0
-  [../]
-  [./left_right_potential]
-    type = NeumannBC
-    variable = potential_E_int
-    boundary = 'top bottom'
-    value = 0
-  [../]
-[]
+    [./top_bottom_temperature]
+      type = NeumannBC
+      variable = temperature
+      boundary = 'top bottom'
+      value = 0
+    [../]
+    [./left_right_potential]
+      type = NeumannBC
+      variable = potential_E_int
+      boundary = 'left right top bottom'
+      value = 0
+    [../]
+  []
+#
+# [BCs]
+#   # [./left_temperature]
+#   #   type = DirichletBC
+#   #   variable = temperature
+#   #   boundary = 'left'
+#   #   value = 0
+#   # [../]
+#   # [./right_temperature]
+#   #   type = DirichletBC
+#   #   variable = temperature
+#   #   boundary = 'right'
+#   #   value = 25
+#   # [../]
+#   #
+#   # # [./left_potential]
+#   # #   type = DirichletBC
+#   # #   variable = potential_E_int
+#   # #   boundary = 'left'
+#   # #   value = 0
+#   # # [../]
+#   # # [./right_potential]
+#   # #   type = DirichletBC
+#   # #   variable = potential_E_int
+#   # #   boundary = 'right'
+#   # #   value = 0
+#   # # [../]
+#   #
+#   # [./top_bottom_temperature]
+#   #   type = NeumannBC
+#   #   variable = temperature
+#   #   boundary = 'top bottom'
+#   #   value = 0
+#   # [../]
+#   # [./left_right_potential]
+#   #   type = NeumannBC
+#   #   variable = potential_E_int
+#   #   boundary = 'top bottom left right'
+#   #   value = 0
+#   # [../]
+#
+#   [./left_temperature]
+#     type = DirichletBC
+#     variable = temperature
+#     boundary = 'left'
+#     value = 0
+#   [../]
+#   [./right_temperature]
+#     type = DirichletBC
+#     variable = temperature
+#     boundary = 'right'
+#     value = 25
+#   [../]
+#
+#   # [./left_potential]
+#   #   type = DirichletBC
+#   #   variable = potential_E_int
+#   #   boundary = 'left'
+#   #   value = 0.058
+#   # [../]
+#   # [./right_potential]
+#   #   type = DirichletBC
+#   #   variable = potential_E_int
+#   #   boundary = 'right'
+#   #   value = 0
+#   # [../]
+# []
 
 [Executioner]
   type = Steady
-  solve_type = PJFNK
+  solve_type = NEWTON
   line_search = none
 []
 

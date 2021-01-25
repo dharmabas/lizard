@@ -66,13 +66,20 @@ ResidualV::computeQpJacobian()
 }
 
 Real
-ResidualV::computeQpOffDiagJacobian()
+ResidualV::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  return ((-_grad_test[_i][_qp](0)) *
-              (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](0)) +
-          (-_grad_test[_i][_qp](1)) *
-              (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](1)) +
-          (-_grad_test[_i][_qp](2)) * (-_electrical_conductivity[_qp] * _seebeck_coefficient[_qp] *
-                                       _grad_phi[_j][_qp](2))) *
-         _len_scale;
+  if (jvar == _temperature_var)
+  {
+    return ((-_grad_test[_i][_qp](0)) * (-_electrical_conductivity[_qp] *
+                                         _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](0)) +
+            (-_grad_test[_i][_qp](1)) * (-_electrical_conductivity[_qp] *
+                                         _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](1)) +
+            (-_grad_test[_i][_qp](2)) * (-_electrical_conductivity[_qp] *
+                                         _seebeck_coefficient[_qp] * _grad_phi[_j][_qp](2))) *
+           _len_scale;
+  }
+  else
+  {
+    return 0.0;
+  }
 }

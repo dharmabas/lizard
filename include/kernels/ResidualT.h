@@ -16,7 +16,7 @@ public:
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
 private:
   const unsigned int _component;
@@ -26,6 +26,9 @@ private:
   const unsigned int _temperature_var;
   const VariableValue & _temperature;
   const VariableGradient & _temperature_grad;
+  // const Real _electrical_conductivity;
+  // const Real _seebeck_coefficient;
+  // const Real _thermal_conductivity;
   const MaterialProperty<Real> & _electrical_conductivity;
   const MaterialProperty<Real> & _seebeck_coefficient;
   const MaterialProperty<Real> & _thermal_conductivity;
