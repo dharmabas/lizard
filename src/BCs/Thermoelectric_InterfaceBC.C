@@ -49,10 +49,10 @@ Thermoelectric_InterfaceBC::computeQpResidual()
   return _u[_qp] - 0;
   // return _u[_qp] - (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
   // _temperature[_qp]; return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
-  // _temperature[_qp] * _potential_E_int_grad[_qp](_component) * _normals[_qp](_component);
-  // return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) * _temperature[_qp] *
-  // _potential_E_int_grad[_qp](_component) * _normals[_qp](_component) * _test[_i][_qp] *
-  // _len_scale; return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
+  // _temperature[_qp] * _potential_E_int_grad[_qp](_component) * _normals[_qp](_component); return
+  // (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) * _temperature[_qp] *
+  // _potential_E_int_grad[_qp](_component) * _normals[_qp](_component) * _test[_i][_qp]
+  // *_len_scale; return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
   // _temperature[_qp] * _potential_E_int_grad[_qp](_component) * _normals[_qp](_component) *
   // _test[_i][_qp];
 }
