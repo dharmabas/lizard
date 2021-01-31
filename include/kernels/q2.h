@@ -3,15 +3,15 @@
 
 #include "Kernel.h"
 
-class Q2;
+class q2;
 
 template <>
-InputParameters validParams<Q2>();
+InputParameters validParams<q2>();
 
-class Q2 : public Kernel
+class q2 : public Kernel
 {
 public:
-  Q2(const InputParameters & parameters);
+  q2(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();

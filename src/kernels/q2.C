@@ -1,10 +1,10 @@
-#include "Q2.h"
+#include "q2.h"
 
-registerMooseObject("lizardApp", Q2);
+registerMooseObject("lizardApp", q2);
 
 template <>
 InputParameters
-validParams<Q2>()
+validParams<q2>()
 {
   InputParameters params = validParams<Kernel>();
   params.addClassDescription("Calculates a residual contribution due to nabla squared Phi = 0");
@@ -20,7 +20,7 @@ validParams<Q2>()
   return params;
 }
 
-Q2::Q2(const InputParameters & parameters)
+q2::q2(const InputParameters & parameters)
   : Kernel(parameters),
     _component(getParam<unsigned int>("component")),
     _temperature_var(coupled("temperature")),
@@ -32,7 +32,7 @@ Q2::Q2(const InputParameters & parameters)
 }
 
 Real
-Q2::computeQpResidual()
+q2::computeQpResidual()
 {
 
   return _grad_test[_i][_qp](_component) *
@@ -42,13 +42,13 @@ Q2::computeQpResidual()
 }
 
 Real
-Q2::computeQpJacobian()
+q2::computeQpJacobian()
 {
   return _grad_test[_i][_qp](_component) * (_grad_phi[_j][_qp](_component)) * _len_scale;
 }
 
 Real
-Q2::computeQpOffDiagJacobian()
+q2::computeQpOffDiagJacobian()
 {
   return _grad_test[_i][_qp](_component) *
          (_seebeck_coefficient[_qp] * _grad_phi[_j][_qp](_component)) * _len_scale;
