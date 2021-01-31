@@ -9,12 +9,19 @@
 
 #pragma once
 
-#include "IntegratedBC.h"
+#include "DirichletBCBase.h"
+
+class Thermoelectric_InterfaceBC;
+
+template <>
+InputParameters validParams<Thermoelectric_InterfaceBC>();
 
 /**
- * Pressure boundary condition using coupled variable to apply pressure in a given direction
+ * Boundary condition of a Dirichlet type
+ *
+ * Sets the value in the node
  */
-class Thermoelectric_InterfaceBC : public IntegratedBC
+class Thermoelectric_InterfaceBC : public DirichletBCBase
 {
 public:
   static InputParameters validParams();
@@ -22,16 +29,12 @@ public:
   Thermoelectric_InterfaceBC(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual() override;
+  virtual Real computeQpValue() override;
 
-  const unsigned int _component;
-  const unsigned int _potential_E_int_var;
-  const VariableValue & _potential_E_int;
-  const VariableGradient & _potential_E_int_grad;
+  /// The value for this BC
+
+  const Real & _value_1;
+  const Real & _value_2;
   const unsigned int _temperature_var;
   const VariableValue & _temperature;
-  const VariableGradient & _temperature_grad;
-  const MaterialProperty<Real> & _seebeck_coefficient_1;
-  const MaterialProperty<Real> & _seebeck_coefficient_2;
-  const Real _len_scale;
 };

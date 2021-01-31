@@ -9,50 +9,36 @@
 
 #include "Thermoelectric_InterfaceBC.h"
 
-registerMooseObject("lizardApp", Thermoelectric_InterfaceBC);
+registerMooseObject("MooseApp", Thermoelectric_InterfaceBC);
+
+defineLegacyParams(Thermoelectric_InterfaceBC);
 
 InputParameters
 Thermoelectric_InterfaceBC::validParams()
 {
-  InputParameters params = IntegratedBC::validParams();
-  params.addClassDescription(
-      "Applies a heat source that is generated as a result of two different seebeck coefficients");
-  params.addRequiredRangeCheckedParam<unsigned int>(
-      "component", "component<3", "The component for the heat flux");
-  params.addRequiredCoupledVar("potential_E_int", "electrical potential");
+  InputParameters params = DirichletBCBase::validParams();
+  params.addRequiredParam<Real>("value_1", "Value 1 of the BC");
+  params.declareControllable("value_1");
+  params.addRequiredParam<Real>("value_2", "Value of the BC");
+  params.declareControllable("value_2");
   params.addRequiredCoupledVar("temperature", "temperature");
-  params.addParam<MaterialPropertyName>("seebeck_coefficient_1", "seebeck_coefficient_1");
-  params.addParam<MaterialPropertyName>("seebeck_coefficient_2", "seebeck_coefficient_2");
-  params.addParam<Real>("len_scale", 1.0, "the length scale of the unit");
-  params.set<bool>("use_displaced_mesh") = true;
+  params.addClassDescription("Imposes the essential boundary condition $u=g$, where $g$ "
+                             "is a constant, controllable value.");
   return params;
 }
 
 Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & parameters)
-  : IntegratedBC(parameters),
-    _component(getParam<unsigned int>("component")),
-    _potential_E_int_var(coupled("potential_E_int")),
-    _potential_E_int(coupledValue("potential_E_int")),
-    _potential_E_int_grad(coupledGradient("potential_E_int")),
+  : DirichletBCBase(parameters),
+
+    _value_1(getParam<Real>("value_1")),
+    _value_2(getParam<Real>("value_2")),
     _temperature_var(coupled("temperature")),
-    _temperature(coupledValue("temperature")),
-    _temperature_grad(coupledGradient("temperature")),
-    _seebeck_coefficient_1(getMaterialProperty<Real>("seebeck_coefficient_1")),
-    _seebeck_coefficient_2(getMaterialProperty<Real>("seebeck_coefficient_2")),
-    _len_scale(getParam<Real>("len_scale"))
+    _temperature(coupledValue("temperature"))
 {
 }
 
 Real
-Thermoelectric_InterfaceBC::computeQpResidual()
+Thermoelectric_InterfaceBC::computeQpValue()
 {
-  return _u[_qp] - 0;
-  // return _u[_qp] - (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
-  // _temperature[_qp]; return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
-  // _temperature[_qp] * _potential_E_int_grad[_qp](_component) * _normals[_qp](_component); return
-  // (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) * _temperature[_qp] *
-  // _potential_E_int_grad[_qp](_component) * _normals[_qp](_component) * _test[_i][_qp]
-  // *_len_scale; return (_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
-  // _temperature[_qp] * _potential_E_int_grad[_qp](_component) * _normals[_qp](_component) *
-  // _test[_i][_qp];
+  return (_value_1 - _value_2) * _temperature[_qp];
 }
