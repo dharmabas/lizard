@@ -35,6 +35,6 @@ protected:
 
   const Real & _value_1;
   const Real & _value_2;
-  const unsigned int _temperature_var;
-  const VariableValue & _temperature;
+  const unsigned int _T_var;
+  const VariableValue & _T;
 };

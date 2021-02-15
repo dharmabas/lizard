@@ -40,7 +40,6 @@ protected:
   const unsigned int _potential_E_int_var;
   const VariableValue & _potential_E_int;
   const VariableGradient & _potential_E_int_grad;
-  const unsigned int _component;
   const MaterialProperty<Real> & _electrical_conductivity;
 
   /// Element Jacobian is only applied if variable = T_fluid
