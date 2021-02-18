@@ -46,12 +46,9 @@ Heat_flux::Heat_flux(const InputParameters & parameters)
 Real
 Heat_flux::computeValue()
 {
-  return (-_thermal_conductivity[_qp] * _temperature_grad[_qp](_component) -
-          _seebeck_coefficient[_qp] * _temperature[_qp] * _electrical_conductivity[_qp] *
-              _potential_E_int_grad[_qp](_component) -
-          _seebeck_coefficient[_qp] * _seebeck_coefficient[_qp] * _electrical_conductivity[_qp] *
-              _temperature[_qp] * _temperature_grad[_qp](_component)) *
-         _len_scale;
-  // return (-_thermal_conductivity[_qp] * _temperature_grad[_qp](_component) +
-  // _seebeck_coefficient[_qp] * _temperature[_qp] * 3.2e6) * _len_scale;
+  return -_thermal_conductivity[_qp] * _temperature_grad[_qp](_component) -
+         _seebeck_coefficient[_qp] * _electrical_conductivity[_qp] * _temperature[_qp] *
+             _potential_E_int_grad[_qp](_component) -
+         _seebeck_coefficient[_qp] * _seebeck_coefficient[_qp] * _electrical_conductivity[_qp] *
+             _temperature[_qp] * _temperature_grad[_qp](_component);
 }

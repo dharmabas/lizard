@@ -9,7 +9,17 @@
 
 #include "Thermoelectric_InterfaceBC.h"
 
-registerMooseObject("MooseApp", Thermoelectric_InterfaceBC);
+// MOOSE includes
+#include "AddVariableAction.h"
+#include "Assembly.h"
+#include "MooseMesh.h"
+#include "MooseVariable.h"
+#include "PenetrationLocator.h"
+#include "SystemBase.h"
+
+#include "libmesh/string_to_enum.h"
+
+registerMooseObject("lizardApp", Thermoelectric_InterfaceBC);
 
 defineLegacyParams(Thermoelectric_InterfaceBC);
 
@@ -21,6 +31,10 @@ Thermoelectric_InterfaceBC::validParams()
   params.declareControllable("value_1");
   params.addRequiredParam<Real>("value_2", "Value of the BC");
   params.declareControllable("value_2");
+  params.addRequiredParam<Real>("value_3", "Value of the BC");
+  params.declareControllable("value_3");
+  // params.addParam<MaterialPropertyName>("seebeck_coefficient_interface","Seebeck coefficent for
+  // the interface");
   params.addRequiredCoupledVar("temperature", "temperature");
   params.addClassDescription("Imposes the essential boundary condition $u=g$, where $g$ "
                              "is a constant, controllable value.");
@@ -32,6 +46,12 @@ Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & p
 
     _value_1(getParam<Real>("value_1")),
     _value_2(getParam<Real>("value_2")),
+    _value_3(getParam<Real>("value_3")),
+    // _seebeck_coefficient_interface(getMaterialProperty<Real>("seebeck_coefficient_interface")),
+    // _seebeck_coefficient_interface(getMaterialProperty<Real>("seebeck_coefficient_interface" +
+    // getParam<std::string>("appended_property_name"))),
+    // _seebeck_coefficient_interface_dT(getMaterialProperty<Real>("seebeck_coefficient_interface" +
+    // getParam<std::string>("appended_property_name") + "_dT")),
     _temperature_var(coupled("temperature")),
     _temperature(coupledValue("temperature"))
 {
@@ -40,5 +60,5 @@ Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & p
 Real
 Thermoelectric_InterfaceBC::computeQpValue()
 {
-  return (_value_1 - _value_2) * _temperature[_qp];
+  return 0;
 }

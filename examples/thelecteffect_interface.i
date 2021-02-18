@@ -298,13 +298,13 @@
     [./ThermoelectricProperties_1]
      type = GenericConstantMaterial
      prop_names = 'electrical_conductivity_1 thermal_conductivity_1 seebeck_coefficient_1'
-     prop_values = '8.422e4 1.612 1.941e-4'
+     prop_values = '8.422e4 1.612 5.0e-3'
      block = 1
     [../]
     [./ThermoelectricProperties_2]
      type = GenericConstantMaterial
      prop_names = 'electrical_conductivity_2 thermal_conductivity_2 seebeck_coefficient_2'
-     prop_values = '8.422e4 1.612 2.0e-4'
+     prop_values = '8.422e4 1.612 1.0e-4'
      block = 2
     [../]
 
@@ -356,18 +356,18 @@
   #   boundary = '3'
   #   value = 500
   # [../]
-  [./interface_temperature]
-    type = Thermoelectric_InterfaceBC
-    variable = temperature
-    temperature = temperature
-    potential_E_int = potential_E_int
-    ##value = -5.0
-    value_1 = 1.941e-4
-    value_2 = 2e-4
-    electrical_conductivity = 8.422e4
-    component = 2
-    boundary = '3'
-  [../]
+  # [./interface_temperature]
+  #   type = Thermoelectric_InterfaceBC
+  #   variable = temperature
+  #   temperature = temperature
+  #   potential_E_int = potential_E_int
+  #   ##value = -5.0
+  #   value_1 = 1.941e-4
+  #   value_2 = 2e-4
+  #   electrical_conductivity = 8.422e4
+  #   component = 2
+  #   boundary = '3'
+  # [../]
   # [./interface_temperature]
   #   type = TE_InterfaceBC
   #     variable = temperature
@@ -387,18 +387,18 @@
     boundary = '1'
     value = 7
   [../]
-  [./top_temperature_1]
-    type = DirichletBC
-    variable = temperature
-    boundary = '9'
-    value = 7
-  [../]
-  [./bottom_temperature_1]
-    type = DirichletBC
-    variable = temperature
-    boundary = '5'
-    value = 7
-  [../]
+  # [./top_temperature_1]
+  #   type = DirichletBC
+  #   variable = temperature
+  #   boundary = '9'
+  #   value = 7
+  # [../]
+  # [./bottom_temperature_1]
+  #   type = DirichletBC
+  #   variable = temperature
+  #   boundary = '5'
+  #   value = 7
+  # [../]
   # [./front_temperature_1]
   #   type = NeumannBC
   #   variable = temperature
@@ -419,18 +419,18 @@
     boundary = '2'
     value = 7
   [../]
-  [./top_temperature_2]
-    type = DirichletBC
-    variable = temperature
-    boundary = '8'
-    value = 7
-  [../]
-  [./bottom_temperature_2]
-    type = DirichletBC
-    variable = temperature
-    boundary = '4'
-    value = 7
-  [../]
+  # [./top_temperature_2]
+  #   type = DirichletBC
+  #   variable = temperature
+  #   boundary = '8'
+  #   value = 7
+  # [../]
+  # [./bottom_temperature_2]
+  #   type = DirichletBC
+  #   variable = temperature
+  #   boundary = '4'
+  #   value = 7
+  # [../]
   # [./front_temperature_2]
   #   type = NeumannBC
   #   variable = temperature
@@ -512,15 +512,21 @@
 [Executioner]
   type = Steady
   solve_type = NEWTON
-  line_search = none
+[]
+
+[Debug]
+  show_var_residual_norms = true
 []
 
 [Preconditioning]
-  [./SMP]
+  [./smp]
     type = SMP
     full = true
+    petsc_options_iname = '-pc_type -pc_factor_shift_type -pc_factor_shift_amount'
+    petsc_options_value = ' lu       NONZERO               1e-10'
   [../]
 []
+
 
 [Postprocessors]
   [./potential_x]
@@ -538,8 +544,4 @@
 [Outputs]
   exodus = true
   csv = true
-[]
-
-[Debug]
-  show_var_residual_norms = true
 []
