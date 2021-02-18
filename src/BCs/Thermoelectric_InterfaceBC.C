@@ -21,7 +21,7 @@ Thermoelectric_InterfaceBC::validParams()
   params.declareControllable("value_1");
   params.addRequiredParam<Real>("value_2", "Value of the BC");
   params.declareControllable("value_2");
-  params.addRequiredCoupledVar("temperature", "temperature");
+  params.addRequiredCoupledVar("T", "temperature");
   params.addClassDescription("Imposes the essential boundary condition $u=g$, where $g$ "
                              "is a constant, controllable value.");
   return params;
@@ -32,13 +32,13 @@ Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & p
 
     _value_1(getParam<Real>("value_1")),
     _value_2(getParam<Real>("value_2")),
-    _temperature_var(coupled("temperature")),
-    _temperature(coupledValue("temperature"))
+    _T_var(coupled("T")),
+    _T(coupledValue("T"))
 {
 }
 
 Real
 Thermoelectric_InterfaceBC::computeQpValue()
 {
-  return (_value_1 - _value_2) * _temperature[_qp];
+  return (_value_1 - _value_2) * _T[_qp];
 }
