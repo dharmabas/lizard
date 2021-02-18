@@ -1,175 +1,122 @@
 [Mesh]
-  file = thermopair.e
+ [gen]
+    ############################################
+    ##
+    ##  Type and dimension of the mesh 
+    ##
+    ############################################
+
+    type = GeneratedMeshGenerator
+    dim = 3
+
+
+    nx = 4
+    ny = 4
+    nz = 50  
+
+    xmin = -0.5
+    xmax = 0.5
+    ymin = -0.5
+    ymax = 0.5
+    zmin = -1.5
+    zmax = 1.5
+
+    #############################################
+    ##
+    ##  FE type/order (hexahedral, tetrahedral
+    ##
+    #############################################
+
+    elem_type = HEX8
+  []
+
+  [subdomains]
+    type = SubdomainBoundingBoxGenerator
+    input = gen
+    bottom_left = '-0.5 -0.5 -1.5'
+    block_id = 1
+    top_right = '0.5 0.5 0.0'
+    location = INSIDE
+  []
+  [film_interface]
+    type = SideSetsBetweenSubdomainsGenerator
+    input = subdomains
+    primary_block = 0
+    paired_block = 1
+    new_boundary = 52
+  []
+[]
+
+[GlobalParams]
+  T = T
+  potential_E_int = potential_E_int
 []
 
 [Variables]
   [./potential_E_int]
     order = FIRST
     family = LAGRANGE
+    [./InitialCondition]
+      type = RandomIC
+      min = -0.1e-5
+      max = 0.1e-5
+    [../]
   [../]
-  [./temperature]
+  [./T]
     order = FIRST
     family = LAGRANGE
+    [./InitialCondition]
+      type = RandomIC
+      min = -0.1e-5
+      max = 0.1e-5
+    [../]
   [../]
 []
 
 [Kernels]
   ########BLOCK 1
-  [./residualV_x_1]
+  [./residualV_0]
     type = ResidualV
-    component = 0
     variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
+    block = 0
+  [../]
+  [./residualT_0]
+    type = ResidualT
+    variable = T
+    block = 0
+  [../]
+
+
+  ########BLOCK 1
+  [./residualV_1]
+    type = ResidualV
+    variable = potential_E_int
     block = 1
   [../]
-
-  [./residualV_y_1]
-    type = ResidualV
-    component = 1
-    variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
+  [./residualT_1]
+    type = ResidualT
+    variable = T
     block = 1
   [../]
-
-  [./residualV_z_1]
-    type = ResidualV
-    component = 2
-    variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
-    block = 1
-  [../]
-
-  [./residualT_x_1]
-    type = ResidualT
-    component = 0
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
-    thermal_conductivity = 'thermal_conductivity_1'
-    block = 1
-  [../]
-
-  [./residualT_y_1]
-    type = ResidualT
-    component = 1
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
-    thermal_conductivity = 'thermal_conductivity_1'
-    block = 1
-  [../]
-
-  [./residualT_z_1]
-    type = ResidualT
-    component = 2
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_1'
-    seebeck_coefficient = 'seebeck_coefficient_1'
-    thermal_conductivity = 'thermal_conductivity_1'
-    block = 1
-  [../]
-
-
-  ########BLOCK 2
-  [./residualV_x_2]
-    type = ResidualV
-    component = 0
-    variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    block = 2
-  [../]
-
-  [./residualV_y_2]
-    type = ResidualV
-    component = 1
-    variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    block = 2
-  [../]
-
-  [./residualV_z_2]
-    type = ResidualV
-    component = 2
-    variable = potential_E_int
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    block = 2
-  [../]
-
-  [./residualT_x_2]
-    type = ResidualT
-    component = 0
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    thermal_conductivity = 'thermal_conductivity_2'
-    block = 2
-  [../]
-
-  [./residualT_y_2]
-    type = ResidualT
-    component = 1
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    thermal_conductivity = 'thermal_conductivity_2'
-    block = 2
-  [../]
-
-  [./residualT_z_2]
-    type = ResidualT
-    component = 2
-    variable = temperature
-    temperature = 'temperature'
-    potential_E_int = 'potential_E_int'
-    electrical_conductivity = 'electrical_conductivity_2'
-    seebeck_coefficient = 'seebeck_coefficient_2'
-    thermal_conductivity = 'thermal_conductivity_2'
-    block = 2
-  [../]
-
-
-  ######INTERFACE
-  # [./Interface]
-  #   type = TE_interfacekernel
-  #   component = 2
-  #   variable = temperature
-  #   temperature = 'temperature'
-  #   potential_E_int = 'potential_E_int'
-  #   electrical_conductivity = '8.422e4'
-  #   seebeck_coefficient_1 = '1.941e-4'
-  #   seebeck_coefficient_2 = '2e-4'
-  #   sideset = 3
-  # [../]
 []
 
+
+[Materials]
+  [./ThermoelectricProperties_block1]
+    type = GenericConstantMaterial
+    prop_names = 'ecC thC sbC'
+    prop_values = '8.422e4 1.612 1.0e-4'
+    block = 0
+  [../]
+  [./ThermoelectricProperties_block2]
+    type = GenericConstantMaterial
+    prop_names = 'ecC thC sbC'
+    prop_values = '8.422e4 1.612 5.0e-3'
+    block = 1
+  [../]
+[]
+
+<<<<<<< HEAD
 # [AuxVariables]
 #   [./j_x]
 #     order = CONSTANT
@@ -444,69 +391,35 @@
   #   value = 0
   # [../]
 
+=======
+[BCs]
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38
 
   [./side_potential_1]
     type = DirichletBC
     variable = potential_E_int
-    boundary = '1'
+    boundary = 'front'
     value = 0.116
   [../]
-  # [./top_potential_1]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '9'
-  #   value = 0
-  # [../]
-  # [./bottom_potential_1]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '5'
-  #   value = 0
-  # [../]
-  # [./front_potential_1]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '7'
-  #   value = 0
-  # [../]
-  # [./back_potential_1]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '11'
-  #   value = 0
-  # [../]
-
-
   [./side_potential_2]
     type = DirichletBC
     variable = potential_E_int
-    boundary = '2'
-    value = 0
+    boundary = 'back'
+    value = 0.0
   [../]
-  # [./top_potential_2]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '8'
-  #   value = 0
-  # [../]
-  # [./bottom_potential_2]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '4'
-  #   value = 0
-  # [../]
-  # [./front_potential_2]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '6'
-  #   value = 0
-  # [../]
-  # [./back_potential_2]
-  #   type = NeumannBC
-  #   variable = potential_E_int
-  #   boundary = '10'
-  #   value = 0
-  # [../]
+
+  [./side_temperature_1]
+    type = DirichletBC
+    variable = T
+    boundary = 'front'
+    value = 7.0
+  [../]
+  [./top_temperature_1]
+    type = DirichletBC
+    variable = T
+    boundary = 'back'
+    value = 7.1
+  [../]
 []
 
 [Executioner]
@@ -529,19 +442,16 @@
 
 
 [Postprocessors]
-  [./potential_x]
-    type = PointValue
-    point = '0 0 0'
-    variable = potential_E_int
-  [../]
-  [./temperature]
-    type = PointValue
-    point = '0 0 0'
-    variable = temperature
-  [../]
+
 []
 
 [Outputs]
   exodus = true
   csv = true
+  file_base = out_thermo4
 []
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38

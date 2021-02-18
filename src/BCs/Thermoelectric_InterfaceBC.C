@@ -31,11 +31,15 @@ Thermoelectric_InterfaceBC::validParams()
   params.declareControllable("value_1");
   params.addRequiredParam<Real>("value_2", "Value of the BC");
   params.declareControllable("value_2");
+<<<<<<< HEAD
   params.addRequiredParam<Real>("value_3", "Value of the BC");
   params.declareControllable("value_3");
   // params.addParam<MaterialPropertyName>("seebeck_coefficient_interface","Seebeck coefficent for
   // the interface");
   params.addRequiredCoupledVar("temperature", "temperature");
+=======
+  params.addRequiredCoupledVar("T", "temperature");
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38
   params.addClassDescription("Imposes the essential boundary condition $u=g$, where $g$ "
                              "is a constant, controllable value.");
   return params;
@@ -46,6 +50,7 @@ Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & p
 
     _value_1(getParam<Real>("value_1")),
     _value_2(getParam<Real>("value_2")),
+<<<<<<< HEAD
     _value_3(getParam<Real>("value_3")),
     // _seebeck_coefficient_interface(getMaterialProperty<Real>("seebeck_coefficient_interface")),
     // _seebeck_coefficient_interface(getMaterialProperty<Real>("seebeck_coefficient_interface" +
@@ -54,11 +59,19 @@ Thermoelectric_InterfaceBC::Thermoelectric_InterfaceBC(const InputParameters & p
     // getParam<std::string>("appended_property_name") + "_dT")),
     _temperature_var(coupled("temperature")),
     _temperature(coupledValue("temperature"))
+=======
+    _T_var(coupled("T")),
+    _T(coupledValue("T"))
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38
 {
 }
 
 Real
 Thermoelectric_InterfaceBC::computeQpValue()
 {
+<<<<<<< HEAD
   return 0;
+=======
+  return (_value_1 - _value_2) * _T[_qp];
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38
 }

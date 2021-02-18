@@ -31,9 +31,6 @@ ConjugateHeatTransfer_lizard::validParams()
       "Seebeck coefficient 2",
       "Property name of the Seebeck coefficient 2 material property");
   params.addRequiredCoupledVar("potential_E_int", "electric potential");
-  params.addRequiredParam<unsigned int>("component",
-                                        "An integer corresponding to the direction the variable "
-                                        "this kernel acts in. (0 for x, 1 for y, 2 for z)");
   params.addParam<MaterialPropertyName>(
       "electrical_conductivity",
       "Electrical Conductivity",
@@ -54,7 +51,6 @@ ConjugateHeatTransfer_lizard::ConjugateHeatTransfer_lizard(const InputParameters
     _potential_E_int_var(coupled("potential_E_int")),
     _potential_E_int(coupledValue("potential_E_int")),
     _potential_E_int_grad(coupledGradient("potential_E_int")),
-    _component(getParam<unsigned int>("component")),
     _electrical_conductivity(getMaterialProperty<Real>("electrical_conductivity")),
     _apply_element_jacobian(_var.name() == getParam<std::vector<VariableName>>("temperature")[0])
 {
@@ -68,12 +64,12 @@ ConjugateHeatTransfer_lizard::computeQpResidual(Moose::DGResidualType type)
     case Moose::Element:
       return raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
              (_temperature[_qp] - _neighbor_value[_qp]) * _test[_i][_qp] *
-             _electrical_conductivity[_qp] * _potential_E_int_grad[_qp](_component);
+             _electrical_conductivity[_qp] * _potential_E_int_grad[_qp] * _normals[_qp];
 
     case Moose::Neighbor:
-      return raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
+      return -raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
              (_neighbor_value[_qp] - _temperature[_qp]) * _test_neighbor[_i][_qp] *
-             _electrical_conductivity[_qp] * _potential_E_int_grad[_qp](_component);
+             _electrical_conductivity[_qp] * _potential_E_int_grad[_qp] * _normals[_qp];
 
     default:
       return 0.0;
@@ -89,25 +85,25 @@ ConjugateHeatTransfer_lizard::computeQpJacobian(Moose::DGJacobianType type)
       return _apply_element_jacobian
                  ? raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
                        _phi[_j][_qp] * _test[_i][_qp] * _electrical_conductivity[_qp] *
-                       _potential_E_int_grad[_qp](_component)
+                       _potential_E_int_grad[_qp] * _normals[_qp]
                  : 0;
 
     case Moose::NeighborNeighbor:
-      return raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
+      return -raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
              _phi_neighbor[_j][_qp] * _test_neighbor[_i][_qp] * _electrical_conductivity[_qp] *
-             _potential_E_int_grad[_qp](_component);
+             _potential_E_int_grad[_qp] * _normals[_qp];
 
     case Moose::NeighborElement:
       return _apply_element_jacobian
-                 ? raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
+                 ? -raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
                        -_phi[_j][_qp] * _test_neighbor[_i][_qp] * _electrical_conductivity[_qp] *
-                       _potential_E_int_grad[_qp](_component)
+                       _potential_E_int_grad[_qp] * _normals[_qp]
                  : 0;
 
     case Moose::ElementNeighbor:
       return raw_value(_seebeck_coefficient_1[_qp] - _seebeck_coefficient_2[_qp]) *
              -_phi_neighbor[_j][_qp] * _test[_i][_qp] * _electrical_conductivity[_qp] *
-             _potential_E_int_grad[_qp](_component);
+             _potential_E_int_grad[_qp] * _normals[_qp];
 
     default:
       return 0.0;

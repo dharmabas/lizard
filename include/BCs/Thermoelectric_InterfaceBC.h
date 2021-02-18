@@ -35,10 +35,15 @@ protected:
 
   const Real & _value_1;
   const Real & _value_2;
+<<<<<<< HEAD
   const Real & _value_3;
   // const MaterialProperty<Real> & _seebeck_coefficient_interface;
   // const MaterialProperty<Real> & _seebeck_coefficient_interface_dT;
   // const MaterialProperty<Real> & _seebeck_coefficient_interface;
   const unsigned int _temperature_var;
   const VariableValue & _temperature;
+=======
+  const unsigned int _T_var;
+  const VariableValue & _T;
+>>>>>>> 6d6d7f608ea121693d8b139204cb9ef158c97c38
 };
