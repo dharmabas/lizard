@@ -21,16 +21,13 @@ protected:
   virtual Real computeValue();
 
 private:
-  const VariableValue & _temperature;
-  const VariableGradient & _temperature_grad;
+  const VariableValue & _T;
+  const VariableGradient & _T_grad;
   const VariableValue & _potential_E_int;
   const VariableGradient & _potential_E_int_grad;
-  // const MaterialProperty<Real> & _thermal_conductivity;
-  const MaterialProperty<RankTwoTensor> & _thermal_conductivity_tensor; // for tensor inclusion
-  const MaterialProperty<RankTwoTensor> & _electrical_conductivity_tensor;
-  const MaterialProperty<RankTwoTensor> & _seebeck_coefficient_tensor;
-  // const MaterialProperty<Real> & _electrical_conductivity;
-  // const MaterialProperty<Real> & _seebeck_coefficient;
+  const MaterialProperty<RankTwoTensor> & _thC_tensor; // for tensor inclusion
+  const MaterialProperty<RankTwoTensor> & _ecC_tensor;
+  const MaterialProperty<RankTwoTensor> & _sbC_tensor;
   const unsigned int _component;
   const Real _len_scale;
 };

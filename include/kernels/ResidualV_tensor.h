@@ -1,5 +1,5 @@
-#ifndef ResidualV_tensor_H
-#define ResidualV_tensor_H
+#ifndef RESIDUALV_TENSOR_H
+#define RESIDUALV_TENSOR_H
 
 #include "Kernel.h"
 #include "Material.h"
@@ -25,15 +25,11 @@ private:
   const unsigned int _potential_E_int_var;
   const VariableValue & _potential_E_int;
   const VariableGradient & _potential_E_int_grad;
-  const unsigned int _temperature_var;
-  const VariableValue & _temperature;
-  const VariableGradient & _temperature_grad;
-  // const Real _electrical_conductivity;
-  // const Real _seebeck_coefficient;
-  // const MaterialProperty<Real> & _electrical_conductivity;
-  // const MaterialProperty<Real> & _seebeck_coefficient;
-  const MaterialProperty<RankTwoTensor> & _electrical_conductivity_tensor; // for tensor inclusion
-  const MaterialProperty<RankTwoTensor> & _seebeck_coefficient_tensor;
+  const unsigned int _T_var;
+  const VariableValue & _T;
+  const VariableGradient & _T_grad;
+  const MaterialProperty<RankTwoTensor> & _ecC_tensor; // for tensor inclusion
+  const MaterialProperty<RankTwoTensor> & _sbC_tensor;
   const Real _len_scale;
 };
 #endif
