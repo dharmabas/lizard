@@ -7,21 +7,20 @@
 
 class Electric_flux;
 
-template<>
+template <>
 InputParameters validParams<Electric_flux>();
 
 class Electric_flux : public AuxKernel
 {
 public:
-Electric_flux(const InputParameters & parameters);
+  Electric_flux(const InputParameters & parameters);
 
-virtual ~Electric_flux() {}
+  virtual ~Electric_flux() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-
   const VariableValue & _T;
   const VariableGradient & _T_grad;
   const VariableValue & _potential_E_int;

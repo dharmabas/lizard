@@ -7,21 +7,20 @@
 
 class Heat_flux;
 
-template<>
+template <>
 InputParameters validParams<Heat_flux>();
 
 class Heat_flux : public AuxKernel
 {
 public:
-Heat_flux(const InputParameters & parameters);
+  Heat_flux(const InputParameters & parameters);
 
-virtual ~Heat_flux() {}
+  virtual ~Heat_flux() {}
 
 protected:
-virtual Real computeValue();
+  virtual Real computeValue();
 
 private:
-
   const VariableValue & _T;
   const VariableGradient & _T_grad;
   const VariableValue & _potential_E_int;

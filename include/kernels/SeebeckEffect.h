@@ -5,13 +5,12 @@
 
 class SeebeckEffect;
 
-template<>
+template <>
 InputParameters validParams<SeebeckEffect>();
 
-class SeebeckEffect: public Kernel
+class SeebeckEffect : public Kernel
 {
 public:
-
   SeebeckEffect(const InputParameters & parameters);
 
 protected:

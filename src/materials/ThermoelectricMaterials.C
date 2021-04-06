@@ -15,11 +15,14 @@ ThermoelectricMaterialTempl<is_ad>::validParams()
   params.addCoupledVar("temp", "Coupled Temperature");
 
   params.addParam<Real>("thC", "The thermal conductivity value");
-  params.addParam<FunctionName>("thC_temperature_function","","Thermal conductivity as a function of temperature.");
+  params.addParam<FunctionName>(
+      "thC_temperature_function", "", "Thermal conductivity as a function of temperature.");
   params.addParam<Real>("ecC", "The electrical conductivity value");
-  params.addParam<FunctionName>("ecC_temperature_function", "", "electrical conductivity as a function of temperature.");
+  params.addParam<FunctionName>(
+      "ecC_temperature_function", "", "electrical conductivity as a function of temperature.");
   params.addParam<Real>("sbC", "The seebeck coefficient value");
-  params.addParam<FunctionName>("sbC_temperature_function", "", "seebeck coefficient as a function of temperature.");
+  params.addParam<FunctionName>(
+      "sbC_temperature_function", "", "seebeck coefficient as a function of temperature.");
   params.addClassDescription("General-purpose material model for thermoelectrics");
 
   return params;
@@ -38,24 +41,21 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
 
     _thC(declareGenericProperty<Real, is_ad>("thC")),
     _thC_dT(declareProperty<Real>("thC_dT")),
-    _thC_temperature_function(
-        getParam<FunctionName>("thC_temperature_function") != ""
-            ? &getFunction("thC_temperature_function")
-            : NULL),
+    _thC_temperature_function(getParam<FunctionName>("thC_temperature_function") != ""
+                                  ? &getFunction("thC_temperature_function")
+                                  : NULL),
 
     _ecC(declareGenericProperty<Real, is_ad>("ecC")),
     _ecC_dT(declareProperty<Real>("ecC_dT")),
-    _ecC_temperature_function(
-        getParam<FunctionName>("ecC_temperature_function") != ""
-            ? &getFunction("ecC_temperature_function")
-            : NULL),
+    _ecC_temperature_function(getParam<FunctionName>("ecC_temperature_function") != ""
+                                  ? &getFunction("ecC_temperature_function")
+                                  : NULL),
 
     _sbC(declareGenericProperty<Real, is_ad>("sbC")),
     _sbC_dT(declareProperty<Real>("sbC_dT")),
-    _sbC_temperature_function(
-        getParam<FunctionName>("sbC_temperature_function") != ""
-            ? &getFunction("sbC_temperature_function")
-            : NULL)
+    _sbC_temperature_function(getParam<FunctionName>("sbC_temperature_function") != ""
+                                  ? &getFunction("sbC_temperature_function")
+                                  : NULL)
 {
   if (_thC_temperature_function && !_has_temp)
   {
@@ -72,8 +72,8 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
   }
   if (isParamValid("ecC") && _ecC_temperature_function)
   {
-    mooseError(
-        "Cannot define both electrical conductivity and electrical conductivity temperature function");
+    mooseError("Cannot define both electrical conductivity and electrical conductivity temperature "
+               "function");
   }
   if (_sbC_temperature_function && !_has_temp)
   {
@@ -81,7 +81,8 @@ ThermoelectricMaterialTempl<is_ad>::ThermoelectricMaterialTempl(const InputParam
   }
   if (isParamValid("sbC") && _sbC_temperature_function)
   {
-    mooseError("Cannot define both seebeck coefficient and seebeck coefficient temperature function");
+    mooseError(
+        "Cannot define both seebeck coefficient and seebeck coefficient temperature function");
   }
 }
 
@@ -133,15 +134,12 @@ ThermoelectricMaterialTempl<is_ad>::computeProperties()
     if (_thC_temperature_function)
     {
       Point p;
-      _thC[qp] =
-          _thC_temperature_function->value(qp_T, p);
+      _thC[qp] = _thC_temperature_function->value(qp_T, p);
       // A terrible exploitation of the Function API to get a derivative with respect to a
       // non-linear variable
-      _thC_dT[qp] =
-          _thC_temperature_function->timeDerivative(qp_T, p);
+      _thC_dT[qp] = _thC_temperature_function->timeDerivative(qp_T, p);
       if (is_ad)
-        setDerivatives(
-            _thC[qp], _thC_dT[qp], _ad_T[qp]);
+        setDerivatives(_thC[qp], _thC_dT[qp], _ad_T[qp]);
     }
     else
     {
@@ -152,15 +150,12 @@ ThermoelectricMaterialTempl<is_ad>::computeProperties()
     if (_ecC_temperature_function)
     {
       Point p;
-      _ecC[qp] =
-          _ecC_temperature_function->value(qp_T, p);
+      _ecC[qp] = _ecC_temperature_function->value(qp_T, p);
       // A terrible exploitation of the Function API to get a derivative with respect to a
       // non-linear variable
-      _ecC_dT[qp] =
-          _ecC_temperature_function->timeDerivative(qp_T, p);
+      _ecC_dT[qp] = _ecC_temperature_function->timeDerivative(qp_T, p);
       if (is_ad)
-        setDerivatives(
-            _ecC[qp], _ecC_dT[qp], _ad_T[qp]);
+        setDerivatives(_ecC[qp], _ecC_dT[qp], _ad_T[qp]);
     }
     else
     {
@@ -171,15 +166,12 @@ ThermoelectricMaterialTempl<is_ad>::computeProperties()
     if (_sbC_temperature_function)
     {
       Point p;
-      _sbC[qp] =
-          _sbC_temperature_function->value(qp_T, p);
+      _sbC[qp] = _sbC_temperature_function->value(qp_T, p);
       // A terrible exploitation of the Function API to get a derivative with respect to a
       // non-linear variable
-      _sbC_dT[qp] =
-          _sbC_temperature_function->timeDerivative(qp_T, p);
+      _sbC_dT[qp] = _sbC_temperature_function->timeDerivative(qp_T, p);
       if (is_ad)
-        setDerivatives(
-            _sbC[qp], _sbC_dT[qp], _ad_T[qp]);
+        setDerivatives(_sbC[qp], _sbC_dT[qp], _ad_T[qp]);
     }
     else
     {

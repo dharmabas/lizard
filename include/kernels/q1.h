@@ -6,13 +6,12 @@
 
 class q1;
 
-template<>
+template <>
 InputParameters validParams<q1>();
 
-class q1: public Kernel
+class q1 : public Kernel
 {
 public:
-
   q1(const InputParameters & parameters);
 
 protected:
@@ -26,6 +25,5 @@ private:
   const VariableValue & _T;
   const VariableGradient & _T_grad;
   const Real _len_scale;
-
 };
 #endif
