@@ -27,18 +27,25 @@
     type = Electrostatics
     variable = potential_E_int
     electrical_conductivity = electrical_conductivity
+    component = 1
   [../]
   [./Seebeck]
     type = SeebeckEffect
     variable = temperature
+    T = temperature
+    potential_E_int = potential_E_int
     electrical_conductivity = 'electrical_conductivity'
-    seebeck_coefficient = 'seebeck_coefficient'
+    seebeck_coefficient = 1.87e-4
+    component = 1
   [../]
 
   [./q1]
     type = q1
     variable = temperature
+    T = temperature
+    potential_E_int = potential_E_int
     thermal_conductivity = 'thermal_conductivity'
+    component = 1
   [../]
   [./q2]
     type = q2
@@ -46,6 +53,7 @@
     temperature = 'temperature'
     electrical_conductivity = 'electrical_conductivity'
     seebeck_coefficient = 'seebeck_coefficient'
+    component = 1
   [../]
   [./q3]
     type = q3
@@ -53,6 +61,7 @@
     temperature = 'temperature'
     electrical_conductivity = 'electrical_conductivity'
     seebeck_coefficient = 'seebeck_coefficient'
+    component = 1
   [../]
 
   [./current1]
@@ -60,6 +69,7 @@
     variable = potential_E_int
     potential_E_int = potential_E_int
     electrical_conductivity = 'electrical_conductivity'
+    component = 1
   [../]
   [./current2]
     type = current2
@@ -67,6 +77,7 @@
     temperature = 'temperature'
     electrical_conductivity = 'electrical_conductivity'
     seebeck_coefficient = 'seebeck_coefficient'
+    component = 1
   [../]
 []
 

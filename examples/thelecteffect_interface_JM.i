@@ -131,12 +131,18 @@
   [./ThermoelectricProperties_block2]
     type = GenericConstantMaterial
     prop_names = 'ecC thC sbC'
-    prop_values = '8.422e4 1.612 5.0e-3'
+    prop_values = '8.422e4 1.612 1.941e-4'
     block = 1
   [../]
 []
 
 [BCs]
+  [./interface_temp]
+    type = DirichletBC
+    variable = T
+    boundary = '52'
+    value = -27
+  [../]
 
   [./side_potential_1]
     type = DirichletBC

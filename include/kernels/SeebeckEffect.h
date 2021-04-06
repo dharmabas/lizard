@@ -3,23 +3,32 @@
 
 #include "Kernel.h"
 
-class SeebeckEffect; // this is the class i define by myself and not an existing moose object?//
+class SeebeckEffect;
 
-template <>
+template<>
 InputParameters validParams<SeebeckEffect>();
 
-class SeebeckEffect : public Kernel
+class SeebeckEffect: public Kernel
 {
 public:
+
   SeebeckEffect(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
 private:
-  const MaterialProperty<Real> & _electrical_conductivity;
-  const MaterialProperty<Real> & _seebeck_coefficient;
+  // const MaterialProperty<Real> & _ecC;
+  const unsigned int _component;
+  const unsigned int _potential_E_int_var;
+  const VariableValue & _potential_E_int;
+  const VariableGradient & _potential_E_int_grad;
+  const unsigned int _T_var;
+  const VariableValue & _T;
+  const VariableGradient & _T_grad;
+  const MaterialProperty<Real> & _sbC;
   const Real _len_scale;
 };
 #endif
